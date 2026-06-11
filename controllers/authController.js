@@ -25,7 +25,7 @@ const sendRefreshTokenCookie = (res, token) => {
     httpOnly: true,
     expires: expiryDate,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'none',
   });
 };
 
