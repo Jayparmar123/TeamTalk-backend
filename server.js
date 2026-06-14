@@ -28,7 +28,15 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 // Connect to database, then seed General channel
-connectDB().then(() => {
+connectDB().then(async () => {
+  try {
+    const { default: User } = await import("./models/User.js");
+    await User.updateMany({}, { $set: { isOnline: false } });
+    console.log("✅ Reset all users presence status to offline on startup");
+  } catch (err) {
+    console.error("Failed to reset user presence status:", err.message);
+  }
+
   ensureGeneralChannel().catch(err =>
     console.error('General channel seed failed:', err.message)
   );
