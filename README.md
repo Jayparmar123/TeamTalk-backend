@@ -28,15 +28,15 @@ https://teamtalk-backend-tb7m.onrender.com/api
 
 ## 🛠️ Tech Stack
 
-* Node.js
-* Express.js
-* MongoDB Atlas
-* Mongoose
-* JWT
-* Socket.IO
-* Cookie Parser
-* BcryptJS
-* CORS
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb,git,github,vscode" alt="Backend Tech Stack" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white" />
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+</p>
 
 ## 📂 Project Structure
 
