@@ -11,7 +11,7 @@ export const getConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: [req.user.id] }
   })
-    .populate('participants', 'name email avatarUrl isOnline lastSeen')
+    .populate('participants', 'name email avatarUrl isOnline lastSeen role')
     .populate({
       path: 'lastMessage',
       populate: { path: 'sender', select: 'name' }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, createUser, updateUser, deleteUser, getAnalytics, getAuditLogs } from '../controllers/adminController.js';
+import { getUsers, createUser, updateUser, deleteUser, getAnalytics, getAuditLogs, getGeneralChannel } from '../controllers/adminController.js';
 import { protect, authorize } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -18,5 +18,6 @@ router.route('/users/:id')
 
 router.get('/analytics', getAnalytics);
 router.get('/audit-logs', getAuditLogs);
+router.get('/general-channel', getGeneralChannel);
 
 export default router;

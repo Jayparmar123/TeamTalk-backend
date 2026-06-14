@@ -6,6 +6,7 @@ import ErrorResponse from '../utils/errorResponse.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { getIO } from '../config/socket.js';
 import { logAudit } from '../utils/logger.js';
+import { addUserToGeneralChannel, ensureGeneralChannel } from '../utils/generalChannel.js';
 
 // @desc    Get all registered users (admin only)
 // @route   GET /api/admin/users
@@ -46,7 +47,15 @@ export const createUser = asyncHandler(async (req, res, next) => {
     avatarUrl: avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`
   });
 
-  // Emit real-time member join event
+  // Auto-add new user to the General channel
+  let generalChannel = null;
+  try {
+    generalChannel = await addUserToGeneralChannel(user._id);
+  } catch (err) {
+    console.error('Failed to add user to General channel:', err.message);
+  }
+
+  // Emit real-time member join event (directory list update)
   try {
     const io = getIO();
     io.emit('member:join', {
@@ -59,6 +68,22 @@ export const createUser = asyncHandler(async (req, res, next) => {
       isOnline: user.isOnline,
       lastSeen: user.lastSeen
     });
+
+    // Notify all connected clients that the General channel participants updated
+    if (generalChannel) {
+      io.emit('channel:member:added', {
+        conversationId: generalChannel._id.toString(),
+        userId: user._id.toString(),
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatarUrl: user.avatarUrl,
+          isOnline: false
+        }
+      });
+    }
   } catch (err) {
     console.error('Socket notification failed on createUser:', err.message);
   }
@@ -245,5 +270,19 @@ export const getAuditLogs = asyncHandler(async (req, res, next) => {
     page,
     pages: Math.ceil(total / limit),
     logs
+  });
+});
+
+// @desc    Get (or create) the General channel with all users
+// @route   GET /api/admin/general-channel
+// @access  Private/Admin
+export const getGeneralChannel = asyncHandler(async (req, res, next) => {
+  const general = await ensureGeneralChannel();
+  const populated = await Conversation.findById(general._id)
+    .populate('participants', 'name email avatarUrl isOnline lastSeen role');
+
+  res.status(200).json({
+    success: true,
+    channel: populated
   });
 });

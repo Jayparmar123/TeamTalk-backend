@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 import { initSocket } from "./config/socket.js";
 import errorHandler from "./middlewares/errorMiddleware.js";
+import { ensureGeneralChannel } from "./utils/generalChannel.js";
 
 // Load routes
 import authRoutes from "./routes/authRoutes.js";
@@ -26,8 +27,12 @@ const __dirname = path.dirname(__filename);
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Connect to database, then seed General channel
+connectDB().then(() => {
+  ensureGeneralChannel().catch(err =>
+    console.error('General channel seed failed:', err.message)
+  );
+});
 
 const app = express();
 const server = http.createServer(app);
