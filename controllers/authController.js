@@ -24,7 +24,7 @@ const sendRefreshTokenCookie = (res, token) => {
   res.cookie('refreshToken', token, {
     httpOnly: true,
     expires: expiryDate,
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'none',
   });
 };
@@ -96,7 +96,7 @@ export const logout = asyncHandler(async (req, res, next) => {
   // Clear cookie
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'none'
   });
 
@@ -193,7 +193,7 @@ export const logoutAllDevices = asyncHandler(async (req, res, next) => {
   // Clear cookie
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'none'
   });
 
