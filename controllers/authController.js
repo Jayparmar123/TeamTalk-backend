@@ -94,11 +94,10 @@ export const logout = asyncHandler(async (req, res, next) => {
   }
 
   // Clear cookie
-  res.cookie('refreshToken', 'none', {
+  res.clearCookie('refreshToken', {
     httpOnly: true,
-    expires: new Date(Date.now() + 10 * 1000),
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'none'
   });
 
   res.status(200).json({
@@ -192,11 +191,10 @@ export const logoutAllDevices = asyncHandler(async (req, res, next) => {
   await user.save();
 
   // Clear cookie
-  res.cookie('refreshToken', 'none', {
+  res.clearCookie('refreshToken', {
     httpOnly: true,
-    expires: new Date(Date.now() + 10 * 1000),
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'none'
   });
 
   res.status(200).json({
